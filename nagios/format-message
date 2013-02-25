@@ -1,0 +1,25 @@
+#!/bin/sh
+# Format Nagios notification messages to irc messages, with colors
+# Usage example:
+#  nagios/format-message CRITICAL PROBLEM "service name" "Something weird happened"
+# will write in standard output:
+#  [Nagios] CRIT (PROBLEM) serice name: Something weird happened
+
+source "${KAOZ_CLIENTS_PATH:-/usr/share/kaoz-clients}/irc-style.sh"
+
+case "$1" in
+  OK | UP)
+    status="${IRC_OK}"
+    ;;
+  WARNING | UNREACHABLE)
+    status="${IRC_WARN}"
+    ;;
+  CRITICAL | DOWN)
+    status="${IRC_CRIT}"
+    ;;
+  *)
+    status="${IRC_UNKNOWN}"
+    ;;
+esac
+
+echo "${IRC_PURPLE}[Nagios] ${status} ($2) $3: $4"
