@@ -21,7 +21,7 @@ else
 fi
 
 # Compute Kaoz server location
-KAOZSERVER="${LISTENER_HOST:-localhost}:${LISTENER_PORT:9010}"
+KAOZSERVER="${LISTENER_HOST:-localhost}:${LISTENER_PORT:-9010}"
 
 # Send the real message
 FILENAME="`mktemp --suffix .ircpipe`"
