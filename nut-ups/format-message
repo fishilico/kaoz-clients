@@ -1,0 +1,54 @@
+#!/bin/sh
+# Format NUT UPS alerts to irc messages, with IRC colors
+#
+# Usage: nut-ups/format-message <upsname> <notifytype>
+#
+# Known values for <notifytype> are:
+# ONBATT, ONLINE, LOWBATT, REPLBATT, COMMBAD, COMMOK, FSD, SHUTDOWN, NOPARENT
+
+# Configure the directory where ircpipe is
+source "${KAOZ_CLIENTS_PATH:-/usr/share/kaoz-clients}/irc-style.sh"
+
+case $2 in
+    on-battery)
+        level="${IRC_WARN}"
+        message="$1: sur batterie"
+        ;;
+    on-line)
+        level="${IRC_OK}"
+        message="$1: branché sur secteur"
+        ;;
+    low-battery)
+        level="${IRC_CRIT}"
+        message="$1: batterie faible"
+        ;;
+    replace-battery)
+        level="${IRC_CRIT}"
+        message="$1: batterie à remplacer"
+        ;;
+    commbad)
+        level="${IRC_WARN}"
+        message="$1: communication coupée"
+        ;;
+    commok)
+        level="${IRC_OK}"
+        message="$1: communication rétablie"
+        ;;
+    fsd)
+        level="${IRC_CRIT}"
+        message="Shutdown forcé en cours"
+        ;;
+    shutdown)
+        level="${IRC_CRIT}"
+        message="Shutdown en cours"
+        ;;
+    noparent)
+        level="${IRC_UNKNOWN}"
+        message="Processus orphelin"
+        ;;
+    *)
+        level="${IRC_UNKNOWN}"
+        message="Received $2 from $1"
+esac
+
+echo "${IRC_PURPLE}[upsmon] $level $message"

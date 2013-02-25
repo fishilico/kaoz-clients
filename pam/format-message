@@ -1,0 +1,56 @@
+#!/bin/sh
+# This script is executed each time someone logs in
+
+source "${KAOZ_CLIENTS_PATH:-/usr/share/kaoz-clients}/irc-style.sh"
+
+# Print:
+# * $1 if $PAM_TYPE is open_session,
+# * $2 if $PAM_TYPE is close_session,
+# * $3 otherwise
+print_pam_type () {
+    if [ "$PAM_TYPE" = "open_session" ]
+    then
+        echo "$1"
+    elif [ $PAM_TYPE = "close_session" ]
+    then
+        echo "$2"
+    else
+        echo "$3"
+    fi
+}
+
+SERVICE_DESC="${IRC_PURPLE}"`/usr/bin/printf "%-4s" ${PAM_SERVICE}`
+SUBJECT_USER="$PAM_USER"
+
+case "$PAM_SERVICE" in
+  "login")
+    # Local login/logout
+    SERVICE_DESC="${IRC_AQUA}local login"
+    ACTION=`print_pam_type "${IRC_GREEN}logged on" "${IRC_RED}logged off" "${IRC_AQUA}did something weird on"`
+    COMPLEMENT="${PAM_TTY}"
+    ;;
+  "ssh")
+    # SSH login/logout
+    ACTION=`print_pam_type "${IRC_GREEN}logged on" "${IRC_RED}logged off" "${IRC_AQUA}did something weird on"`
+    COMPLEMENT="from ${PAM_RHOST}"
+    ;;
+  "sudo"|"su")
+    # su and sudo exection
+    ACTION=`print_pam_type "is impersonating" "is no longer impersonating" "${IRC_AQUA}does something weird with"`
+    SUBJECT_USER="$PAM_RUSER"
+    if [ "x$PAM_USER" = "xroot" ]
+    then
+        NEW_USER="${IRC_RED}root${IRC_O}"
+    else
+        NEW_USER="${IRC_OLIVE}${PAM_USER}${IRC_O}"
+    fi
+    COMPLEMENT="${NEW_USER} on ${PAM_TTY}"
+    ;;
+  *)
+    SERVICE_DESC="${IRC_RED}Abnormality"
+    ACTION="${IRC_AQUA}Unhandled call."
+    COMPLEMENT="Data=${PAM_RHOST}, ${PAM_RUSER}, ${PAM_SERVICE}, ${PAM_TTY}, ${PAM_USER} and ${PAM_TYPE}"
+    ;;
+esac
+
+echo "${SERVICE_DESC}${IRC_O} -- ${IRC_B}${IRC_OLIVE}${SUBJECT_USER}${IRC_O} ${ACTION}${IRC_O} ${COMPLEMENT}"
