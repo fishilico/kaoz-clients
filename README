@@ -17,9 +17,8 @@ There are several scripts which interfaces with a Kaoz server. These scripts aim
 <dt>python</dt>
 <dd>A simple Python script which interfaces well with Kaoz server interface.</dd>
 <dt>shell</dt>
-<dd>This simple shell script allows you to use the shell pipe operator to send messages to Kaoz. Please note that since it contains Kaoz's password, it is rather sensible.</dd>
-<dt>irc-style.sh</dt>
-<dd>Some useful definitions to write messages on IRC</dd>
+<dd>`ircpipe` shell script allows you to use the shell pipe operator to send messages to Kaoz. Please note that since it contains Kaoz's password, it is rather sensible.
+`irc-style.sh` defines some useful definitions to write color messages on IRC.</dd>
 </dl>
 
 Contact
