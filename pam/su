@@ -1,5 +1,6 @@
 # /etc/pam.d/su with Kaoz log
 
+# These lines are usual configuration
 auth        sufficient  pam_rootok.so
 auth        required    pam_wheel.so use_uid
 auth        include     system-auth
@@ -8,4 +9,5 @@ password    include     system-auth
 session     include     system-auth
 session     required    pam_env.so
 session     optional    pam_xauth.so
+# This line adds Kaoz log
 session     optional    pam_exec.so seteuid /usr/share/kaoz-clients/pam/notify-message
