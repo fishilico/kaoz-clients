@@ -23,24 +23,22 @@ fi
 # Compute Kaoz server location
 KAOZSERVER="${LISTENER_HOST:-localhost}:${LISTENER_PORT:-9010}"
 
-# Send the real message
-FILENAME="`mktemp --suffix .ircpipe`"
+# Send the real message, from stdin
 while read LINE
 do
-    echo "${LISTENER_PASSWORD}:${CHANNEL}:(`hostname`) $LINE" >> $FILENAME
-done
+    echo "${LISTENER_PASSWORD}:${CHANNEL}:(`hostname`) $LINE"
+done | \
 if ${LISTENER_SSL:-false}
 then
     if [ "x" = "x${LISTENER_CRT}" ]
     then
         # SSL without CA
-        socat - "OPENSSL:${KAOZSERVER}" < $FILENAME
+        socat - "OPENSSL:${KAOZSERVER}"
     else
         # SSL with a CA
-        socat - "OPENSSL:${KAOZSERVER},verify,cafile=${LISTENER_CRT}" < $FILENAME
+        socat - "OPENSSL:${KAOZSERVER},verify,cafile=${LISTENER_CRT}"
     fi
 else
     # No SSL
-    socat - "TCP:${KAOZSERVER}" < $FILENAME
+    socat - "TCP:${KAOZSERVER}"
 fi
-rm $FILENAME
