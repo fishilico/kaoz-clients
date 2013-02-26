@@ -1,0 +1,45 @@
+#!/bin/sh
+# Format Git commits in colors with IRC
+# Usage:
+#  git/format-message oldrev newrev refname
+# Example:
+#  git/format-message 012345 abcdef master
+
+source "${KAOZ_CLIENTS_PATH:-/usr/share/kaoz-clients}/shell/irc-style.sh"
+
+if [ $# != 3 ]
+then
+    echo >&2 "Usage: git/format-message oldrev newrev refname"
+    exit 1
+fi
+
+OLDREV="$1"
+NEWRED="$2"
+REFNAME="$3"
+
+REVDIFF="$1..$2"
+BRANCH=$(echo -n "$REFNAME" | sed 's-.*/^\([^/]*\)-\1-')
+
+GIT_DIR=$(git rev-parse --git-dir 2>/dev/null)
+DESC_FILE="$GIT_DIR/description"
+if [ -r "$DESC_FILE" ]
+then
+    DESCRIPTION=$(sed -ne '1p' "$DESC_FILE")
+else
+    DESCRIPTION=$(basename "$GIT_DIR")
+fi
+
+IRC_CHANNEL=$(git config hooks.ircchannel)
+if [ "x$IRC_CHANNEL" = "x" ]
+then
+    echo >&2 "No hooks.ircchannel configured in $GIT_DIR"
+    exit 1
+fi
+
+# Execute git log
+git log --pretty='format:-IRCRED-%an -IRCNAVY-%h -IRCBLACK-%s' "$REVDIFF" | \
+sed -e "s/-IRCRED-/${IRC_RED}/g"                              \
+    -e "s/-IRCNAVY-/${IRC_NAVY}/g"                          \
+    -e "s/-IRCBLACK-/${IRC_O}/g"                              \
+    -e "s/^/${IRC_GREEN}[${DESCRIPTION}:${BRANCH}]${IRC_O} /" \
+    -e 's/$/\n/'
