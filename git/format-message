@@ -5,7 +5,7 @@
 # Example:
 #  echo 012345 abcdef master | git/send-message
 
-source "${KAOZ_CLIENTS_PATH:-/usr/share/kaoz-clients}/shell/irc-style.sh"
+source "${KAOZ_CLIENTS_PATH:-/usr/share/kaoz-clients}/style/irc-style.sh"
 
 read OLDREV NEWREV REFNAME
 
@@ -26,7 +26,6 @@ IRC_CHANNEL=$(git config hooks.ircchannel)
 DESCRIPTION="${IRC_GREEN}[${DESCRIPTION}:${BRANCH}]${IRC_O}"
 AUTHOR="${IRC_RED}%an${IRC_O}"
 HASH="${IRC_NAVY}%h${IRC_O}"
-(
 git log --pretty="format:$DESCRIPTION $AUTHOR $HASH %s" "$OLDREV..$NEWRED"
+# Need a newline at the end of git log
 echo ""
-) | ${IRCPIPE:-/usr/share/kaoz-clients/shell/ircpipe.sh} "$IRC_CHANNEL"

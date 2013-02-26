@@ -1,7 +1,11 @@
 #!/bin/sh
-# Example of hooks/post-receive file of a Git repository.
+# Example of hooks/post-receive file of a Git repository
 
 # Change this if you want to use another ircpipe program
-IRCPIPE="/usr/share/kaoz-clients/shell/ircpipe.sh"
+IRCPIPE="${KAOZ_CLIENTS_PATH:-/usr/share/kaoz-clients}/pipes/ircpipe.sh"
+FORMAT_MESSAGE="${KAOZ_CLIENTS_PATH:-/usr/share/kaoz-clients}/git/format-message"
 
-/usr/share/kaoz-clients/git/send-message
+# Leave empty to use the default channel defined in ircpipe
+CHANNEL=""
+
+"$FORMAT_MESSAGE" | "$IRCPIPE" "$CHANNEL"
