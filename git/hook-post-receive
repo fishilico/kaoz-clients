@@ -1,0 +1,8 @@
+#!/bin/sh
+# Example of hooks/post-receive file of a Git repository
+# Please change password and IRC channel according to your configuration, and
+# kaoz-clients path and socat parameters too.
+
+read OLDREV NEWREV REFNAME
+/usr/share/kaoz-clients/git/format-message "$OLDREV" "$NEWREV" "$REFNAME" | \
+sed 's/^/MyKaozPassword:#my-git-chan:/' |socat - TCP:localhost:9010
