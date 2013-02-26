@@ -2,4 +2,4 @@
 # You may copy this file and modify it to get it fit our own configuration.
 
 "${KAOZ_CLIENTS_PATH:-/usr/share/kaoz-clients}/pam/format-message" | \
-sed 's/^/MyKaozPassword:#my-pam-chan: ('`hostname`') /' |socat - TCP:localhost:9010
+sed 's/^/MyKaozPassword:#my-pam-chan:('`hostname`') /' |socat - TCP:localhost:9010
