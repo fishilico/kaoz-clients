@@ -20,8 +20,6 @@ else
     DESCRIPTION=$(basename "$GIT_DIR")
 fi
 
-IRC_CHANNEL=$(git config hooks.ircchannel)
-
 # Execute git log
 DESCRIPTION="${IRC_GREEN}[${DESCRIPTION}:${BRANCH}]${IRC_O}"
 AUTHOR="${IRC_RED}%an${IRC_O}"
