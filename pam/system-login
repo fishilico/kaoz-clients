@@ -1,5 +1,6 @@
 # /etc/pam.d/system-login with Kaoz log
 
+# These lines are usual configuration
 auth        required    pam_tally2.so onerr=succeed
 auth        required    pam_shells.so
 auth        required    pam_nologin.so
@@ -12,6 +13,7 @@ account     required    pam_tally2.so onerr=succeed
 
 password    include     system-auth
 
+# This line adds Kaoz log
 session     optional    pam_exec.so /usr/share/kaoz-clients/pam/notify-message
 session     optional    pam_loginuid.so
 session     required    pam_env.so
