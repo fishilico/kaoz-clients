@@ -17,7 +17,6 @@ OLDREV="$1"
 NEWRED="$2"
 REFNAME="$3"
 
-REVDIFF="$1..$2"
 BRANCH=$(echo -n "$REFNAME" | sed 's-.*/^\([^/]*\)-\1-')
 
 GIT_DIR=$(git rev-parse --git-dir 2>/dev/null)
@@ -37,9 +36,8 @@ then
 fi
 
 # Execute git log
-git log --pretty='format:-IRCRED-%an -IRCNAVY-%h -IRCBLACK-%s' "$REVDIFF" | \
-sed -e "s/-IRCRED-/${IRC_RED}/g"                              \
-    -e "s/-IRCNAVY-/${IRC_NAVY}/g"                          \
-    -e "s/-IRCBLACK-/${IRC_O}/g"                              \
-    -e "s/^/${IRC_GREEN}[${DESCRIPTION}:${BRANCH}]${IRC_O} /" \
-    -e 's/$/\n/'
+DESCRIPTION="${IRC_GREEN}[${DESCRIPTION}:${BRANCH}]${IRC_O}"
+AUTHOR="${IRC_RED}%an${IRC_O}"
+HASH="${IRC_NAVY}%h${IRC_O}"
+git log --pretty="format:$DESCRIPTION $AUTHOR $HASH %s" "$OLDREV..$NEWRED"
+echo ""
