@@ -8,6 +8,8 @@ Overview
 There are several scripts which interfaces with a Kaoz server (https://github.com/BinetReseau/Kaoz).
 These scripts aims to be installed in folder `/usr/share/kaoz-clients`.
 The subfolders contain configuration files for several hooks, but `pipes` and `style`.
+To use these files, you may copy `pipes/ircpipe.sh` to another location such as `/etc/kaoz/ircpipe.sh` and edit this file accordingly to your configuration.
+Then, copy and edit the files you want to have IRC notifications via Kaoz.
 
 Pipes and style
 ---------------
