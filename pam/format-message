@@ -29,7 +29,7 @@ case "$PAM_SERVICE" in
     ACTION=`print_pam_type "${IRC_GREEN}logged on" "${IRC_RED}logged off" "${IRC_AQUA}did something weird on"`
     COMPLEMENT="${PAM_TTY}"
     ;;
-  "ssh")
+  "ssh"|"sshd")
     # SSH login/logout
     ACTION=`print_pam_type "${IRC_GREEN}logged on" "${IRC_RED}logged off" "${IRC_AQUA}did something weird on"`
     COMPLEMENT="from ${PAM_RHOST}"
