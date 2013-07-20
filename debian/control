@@ -1,0 +1,18 @@
+Source: kaoz-clients
+Section: net
+Priority: extra
+Maintainer: Nicolas Iooss <nicolas.iooss@m4x.org>
+Build-Depends: debhelper (>= 9.0.0), python (>= 2.6.6-3)
+Standards-Version: 3.9.4
+Homepage: https://github.com/fishilico/kaoz-clients
+Vcs-Git: https://github.com/fishilico/kaoz-clients.git
+Vcs-Browser: https://github.com/fishilico/kaoz-clients
+X-Python-Version: >= 2.6
+
+Package: kaoz-clients
+Architecture: any
+Depends: ${misc:Depends}, ${python:Depends}
+Description: Clients for Kaoz, a free IRC notifier
+ Kaoz is a free notifier for IRC. It's purpose is to provide an easy to use way
+ for System Administrators to send warnings and logs on any chosen IRC channel.
+ This package provides scripts to ease the interaction with Kaoz.

@@ -1,0 +1,7 @@
+# Copy every directories in /usr/share/kaoz-clients
+git         usr/share/kaoz-clients
+nagios      usr/share/kaoz-clients
+nut-ups     usr/share/kaoz-clients
+pam         usr/share/kaoz-clients
+pipes       usr/share/kaoz-clients
+style       usr/share/kaoz-clients

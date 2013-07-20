@@ -37,3 +37,11 @@ nosetests.xml
 # Temporary files
 *~
 .*.swp
+
+# Debian package
+/debian/*.log
+/debian/*.debhelper
+/debian/*.substvars
+/debian/files
+/debian/kaoz-clients
+/debian/tmp
