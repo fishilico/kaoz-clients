@@ -10,7 +10,7 @@ Vcs-Browser: https://github.com/fishilico/kaoz-clients
 X-Python-Version: >= 2.6
 
 Package: kaoz-clients
-Architecture: any
+Architecture: all
 Depends: ${misc:Depends}, ${python:Depends}
 Description: Clients for Kaoz, a free IRC notifier
  Kaoz is a free notifier for IRC. It's purpose is to provide an easy to use way
