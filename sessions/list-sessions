@@ -1,0 +1,65 @@
+#!/bin/sh
+# Get ssh and local sessions which should not be left opened
+# This script may be used in a cron script with following configuration, to be executed every night at 4:00:
+#   0 4 * * * root /usr/share/kaoz-clients/sessions/list-sessions |/path/to/ircpipe.sh
+
+# Get PID_IP:PORT_USER for sshd sessions
+# Match: ... (Local Address) (Foreign Address) ... (PID/sshd: user)
+for LINE in $(netstat -tnpW |sed -n 's/^[^:]* \([^ ]\+\) \+\([^ ]\+\) [^0-9]*\([0-9]\+\)\/sshd: *\([^ ]\+\).*/\3_\2_\4/p')
+do
+    L_PID=${LINE%%_*}
+    REMAINDER=${LINE#*_}
+    L_IPPORT=${REMAINDER%%_*}
+    L_USER=${REMAINDER#*_}
+    L_IP=${L_IPPORT%:*}
+
+    # Find elapsed time of process $L_PID
+    # ps line is "sshd: user [priv] 7-00:42:03" if user is connected for 7 days 0h 42m 3s
+    L_TIME=$(ps -o cmd,etime --no-header -p $L_PID| sed -n 's/^sshd: [^ ]\+ \[priv\] *\([^ ]\+\)/\1/p')
+    if [ -z "$L_TIME" ]
+    then
+        # Process has exited between the 2 commands, netstat should no longer show it
+        if netstat -tnpW | grep -q "$L_PID/sshd"
+        then
+            echo "FAILURE: Remote login of $L_USER from $L_IP with hidden process $L_PID"
+        fi
+        continue
+    fi
+
+    # Distinction between long connections (>=1 day) and short ones
+    L_TIME=$(echo "$L_TIME" |sed -e 's/\([0-9]\+\)-\([0-9]\+:[0-9]\+:[0-9]\+\)/\1d \2/')
+    echo "Remote login of $L_USER from $L_IP for $L_TIME"
+done
+
+# Get PID of local login sessions
+for L_PID in $(pgrep --exact login)
+do
+    # Find login's child
+    USER_TIME=$(ps -o ruser,etime --no-header --ppid $L_PID)
+    # Transform UID into real ID
+    L_USER=$(getent passwd ${USER_TIME%% *} |cut -d: -f1)
+
+    L_TIME=${USER_TIME##* }
+    L_TIME=$(echo "$L_TIME" |sed -e 's/\([0-9]\+\)-\([0-9]\+:[0-9]\+:[0-9]\+\)/\1d \2/')
+    echo "Local login of $L_USER for $L_TIME"
+done
+
+# Find su/sudo sessions
+for L_PID in $(pgrep --exact su) $(pgrep --exact sudo)
+do
+    # Find parent and command
+    COMM_PPID=$(ps -o comm,ppid --no-header -p $L_PID)
+    L_COMM=${COMM_PPID%% *}
+    PAR_USER=$(ps -o ruser --no-header -p ${COMM_PPID##* })
+    
+    # Find executed proccess
+    SU_USER_TIME=$(ps -o ruser,etime --no-header --ppid $L_PID)
+    L_TIME=${SU_USER_TIME##* }
+    L_TIME=$(echo "$L_TIME" |sed -e 's/\([0-9]\+\)-\([0-9]\+:[0-9]\+:[0-9]\+\)/\1d \2/')
+
+    # Transform UID into real ID
+    SU_USER=$(getent passwd ${SU_USER_TIME%% *} |cut -d: -f1)
+    PAR_USER=$(getent passwd $PAR_USER |cut -d: -f1)
+
+    echo "${L_COMM:-su or sudo} $SU_USER by $PAR_USER for $L_TIME"
+done

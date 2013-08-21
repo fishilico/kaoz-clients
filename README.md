@@ -41,6 +41,11 @@ Linux provides an extensible authentication system.
 Each Linux distribution has a different set of default configuration files for PAM, so you should not copy and paste the configuration files to your `/etc/pam.d/` directory.
 You may instead edit by hand your files and add a `pam_exec.so` line with `notify-message` script.
 
+Sessions
+--------
+`sessions` folder contains a script which list all active sessions on an host (ssh, local login and su/sudo).
+This script may be executed every night by cron to monitor unexpected opened connection to an host.
+
 Contact
 -------
 
