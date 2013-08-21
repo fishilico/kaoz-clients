@@ -8,6 +8,8 @@ Overview
 There are several scripts which interfaces with a Kaoz server (https://github.com/BinetReseau/Kaoz).
 These scripts aims to be installed in folder `/usr/share/kaoz-clients`.
 The subfolders contain configuration files for several hooks, but `pipes` and `style`.
+To use these files, you may copy `pipes/ircpipe.sh` to another location such as `/etc/kaoz/ircpipe.sh` and edit this file accordingly to your configuration.
+Then, copy and edit the files you want to have IRC notifications via Kaoz.
 
 Pipes and style
 ---------------
@@ -38,6 +40,11 @@ Linux provides an extensible authentication system.
 `pam` folder PAM configuration files to be used to report on IRC each login/logout, being with SSH, local login or su/sudo.
 Each Linux distribution has a different set of default configuration files for PAM, so you should not copy and paste the configuration files to your `/etc/pam.d/` directory.
 You may instead edit by hand your files and add a `pam_exec.so` line with `notify-message` script.
+
+Sessions
+--------
+`sessions` folder contains a script which list all active sessions on an host (ssh, local login and su/sudo).
+This script may be executed every night by cron to monitor unexpected opened connection to an host.
 
 Contact
 -------
