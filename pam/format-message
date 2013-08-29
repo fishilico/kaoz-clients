@@ -11,7 +11,7 @@ print_pam_type () {
     if [ "$PAM_TYPE" = "open_session" ]
     then
         echo "$1"
-    elif [ $PAM_TYPE = "close_session" ]
+    elif [ "$PAM_TYPE" = "close_session" ]
     then
         echo "$2"
     else
@@ -19,7 +19,7 @@ print_pam_type () {
     fi
 }
 
-SERVICE_DESC="${IRC_PURPLE}"`/usr/bin/printf "%-4s" ${PAM_SERVICE}`
+SERVICE_DESC="${IRC_PURPLE}"`/usr/bin/printf "%-4s" "${PAM_SERVICE}"`
 SUBJECT_USER="$PAM_USER"
 
 case "$PAM_SERVICE" in
