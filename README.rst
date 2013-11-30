@@ -40,11 +40,20 @@ Linux provides an extensible authentication system.
 ``pam`` folder PAM configuration files to be used to report on IRC each login/logout, being with SSH, local login or su/sudo.
 Each Linux distribution has a different set of default configuration files for PAM, so you *should not blindly copy* and paste the configuration files to your ``/etc/pam.d/`` directory. These files were written for Gentoo in 2012 and may break other Linux distributions.
 You may instead edit by hand your files and add a ``pam_exec.so`` line with ``notify-message`` script.
-For example in Debian, you may add this to ``/etc/pam.d/common-session`` and ``/etc/pam.d/common-session-noninteractive``::
+For example in Debian, you may add this to ``/etc/pam.d/common-session`` and ``/etc/pam.d/sudo``::
 
     session optional    pam_exec.so seteuid /etc/pam.d/notify-message
 
-... where ``/etc/pam.d/notify-message`` is a customized copy of ``pam/notify-message``.
+... where ``/etc/pam.d/notify-message`` is a customized copy of ``pam/notify-message`` or simply (when kaoz is on the same host):
+
+.. code-block:: sh
+
+    #!/bin/sh
+    # Replace 'secret' with your kaoz password, '#help' with the channel you want, etc.
+    bash /usr/share/kaoz-clients/pam/format-message | \
+        sed 's/^/secret:#help:/' | \
+        socat - TCP:localhost:9010
+
 
 Sessions
 --------
